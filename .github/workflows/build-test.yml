@@ -13,4 +13,4 @@ jobs:
       - name: Package
         run: mvn -Dmaven.test.skip=true package
       - name: Run
-        run: java -cp target/kotlin-maven-2.4.2-jar-with-dependencies.jar com.ecommerce.customer.CustomerApplication
+        run: java -cp target/kotlin-maven-2.4.2-jar-with-dependencies.jar com.ecommerce.customer.CustomerApplicationKt
