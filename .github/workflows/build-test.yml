@@ -7,10 +7,10 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
-          java-version: '11'
+          java-version: '8'
       - name: Run tests
         run: mvn test
       - name: Package
         run: mvn -Dmaven.test.skip=true package
-      - name: Try it!
+      - name: Run
         run: java -cp target/kotlin-maven-2.4.2-jar-with-dependencies.jar com.ecommerce.customer.CustomerApplicationKt
