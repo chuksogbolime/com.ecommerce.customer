@@ -32,7 +32,7 @@ class CustomerServiceTest
         assertAll(
             { Assertions.assertTrue(result.second)},
             { Assertions.assertTrue(result.first !=null)},
-            { Assertions.assertEquals(result.third, "Success") }
+            { Assertions.assertEquals("Success",result.third) }
 
         )
     }
@@ -89,5 +89,60 @@ class CustomerServiceTest
 
         val result = sut.getCustomers()
         Assertions.assertTrue(result.count() == 3)
+    }
+
+    @Test
+    fun `updateCustomer should update an existing record and return a Tripple with true`(){
+        //Arrange
+        val customer = buildCustomerDTO()
+        val saved = customerRepository.save(customer.toCustomer())
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepository)
+        //Act
+        val result = sut.updateCustomer(saved.id!!, customer)
+
+        //Assert
+        assertAll(
+            { Assertions.assertTrue(result.second)},
+            { Assertions.assertTrue(result.first !=null)},
+            { Assertions.assertEquals( "Success",result.third) }
+
+        )
+
+    }
+
+    @Test
+    fun `updateCustomer should fail for a record not found and return a Tripple with false`(){
+        //Arrange
+        val customer = buildCustomerDTO()
+        val expectedId = Long.MAX_VALUE
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepository)
+        //Act
+        val result = sut.updateCustomer(expectedId, customer)
+
+        //Assert
+        assertAll(
+            { Assertions.assertFalse(result.second)},
+            { Assertions.assertEquals( "Customer with Id:$expectedId, does not exist",result.third) }
+
+        )
+
+    }
+
+    @Test
+    fun `updateCustomer should throw an exception on update object to db and return false, null and exception message`(){
+
+        val customerDTO = buildCustomerDTO()
+        @RelaxedMockK
+        var customerRepositoryMock = mockk<ICustomerRepository>()
+        every { customerRepositoryMock.save(customerDTO.toCustomer()) } throws Exception("Exception")
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepositoryMock)
+
+
+        val result = sut.updateCustomer(0, customerDTO)
+        assertAll(
+            { Assertions.assertFalse(result.second)},
+            { Assertions.assertTrue(result.first ==null)}
+
+        )
     }
 }

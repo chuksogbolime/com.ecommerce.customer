@@ -88,4 +88,37 @@ class CustomerControllerUnitTest {
 
         Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)
     }
+
+
+    @Test
+    fun `updateCustomer should return OK`(){
+        val customer = buildCustomerApiRequest()
+        val expectedId=1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { commandMock.updateCustomer(expectedId, customer.toCustomerDTO()) } returns Triple(customer.toCustomerDTO(), true,"Success")
+
+        val result = controller.updateCustomer(expectedId, customer)
+
+        Assertions.assertTrue(result.statusCode==HttpStatus.OK)
+    }
+
+    @Test
+    fun `updateCustomer should return BadRequest`(){
+        val customer = buildCustomerApiRequest()
+        val expectedId=1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { commandMock.updateCustomer(expectedId, customer.toCustomerDTO()) } returns Triple(null, false,"")
+
+        val result = controller.updateCustomer(expectedId, customer)
+
+        Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)
+    }
 }

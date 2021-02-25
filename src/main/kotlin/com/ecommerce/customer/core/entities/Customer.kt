@@ -6,7 +6,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class Customer(
+data class Customer(
     val name:String,
     val lastName: String,
     val street: String,

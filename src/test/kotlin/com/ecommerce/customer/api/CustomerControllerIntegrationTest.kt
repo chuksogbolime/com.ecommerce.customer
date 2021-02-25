@@ -19,6 +19,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 //@WebMvcTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -78,6 +79,32 @@ class CustomerControllerIntegrationTest
     @Test
     fun `addCustomer should return Http Status BadRequest`(){
         mockMvc.post("/api/customer").andExpect {
+            status { isBadRequest() }
+            content { "Error saving customer" }
+        }
+
+    }
+
+    @Test
+    fun `updateCustomer should return Http Status OK`(){
+
+        val customer = buildCustomerDTO()
+        val saved= customerRepository.save(customer.toCustomer())
+        mockMvc.put("/api/customer/${saved.id}"){
+            content = ObjectMapper().writeValueAsString(customer)
+            contentType = MediaType.APPLICATION_JSON
+            accept = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+            content { ObjectMapper().writeValueAsString(customer) }
+        }
+
+    }
+
+    @Test
+    fun `updateCustomer should return Http Status BadRequest`(){
+        mockMvc.put("/api/customer/1").andExpect {
             status { isBadRequest() }
             content { "Error saving customer" }
         }
