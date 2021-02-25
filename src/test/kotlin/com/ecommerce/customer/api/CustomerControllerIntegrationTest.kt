@@ -110,4 +110,31 @@ class CustomerControllerIntegrationTest
         }
 
     }
+
+    @Test
+    fun `getCustomerById should return Http Status OK`(){
+
+        val customer = buildCustomerDTO()
+        val saved= customerRepository.save(customer.toCustomer())
+        mockMvc.get("/api/customer/${saved.id}"){
+            content = ObjectMapper().writeValueAsString(customer)
+            contentType = MediaType.APPLICATION_JSON
+            accept = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+            content { ObjectMapper().writeValueAsString(customer) }
+        }
+
+    }
+
+    @Test
+    fun `getCustomerById should return Http Status BadRequest`(){
+        val expectedId = Long.MAX_VALUE
+        mockMvc.get("/api/customer/${expectedId}").andExpect {
+            status { isBadRequest() }
+            content { "Customer with Id:$expectedId does not existcustomer" }
+        }
+
+    }
 }

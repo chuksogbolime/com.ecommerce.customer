@@ -45,5 +45,11 @@ class CustomerController(private val customerQueryService: ICustomerQueryService
             ResponseEntity.badRequest().body("Error updating customer")
     }
 
+    @GetMapping("/{id}")
+    fun getCustomerById(@PathVariable(value = "id") id: Long):ResponseEntity<Any>{
+        val result=customerQueryService.getCustomerById(id)
+        return if(result !=null) ResponseEntity.ok(result) else ResponseEntity.badRequest().body("Customer with Id:$id does not exist")
+    }
+
 
 }

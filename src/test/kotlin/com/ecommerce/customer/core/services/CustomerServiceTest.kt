@@ -145,4 +145,26 @@ class CustomerServiceTest
 
         )
     }
+
+    @Test
+    fun `getCustomerById should return found CustomerDTO`(){
+        val customerList = ArrayList<Customer>()
+        for(i in 1..3){
+            customerList.add(customerRepository.save(buildCustomer()))
+        }
+
+        val sut : ICustomerQueryService = CustomerQueryService(customerRepository)
+
+        val result = sut.getCustomerById(customerList.first().id!!)
+        Assertions.assertTrue(result !=null)
+    }
+
+    @Test
+    fun `getCustomerById should return null for not found customer`(){
+        customerRepository.deleteAll()
+        val sut : ICustomerQueryService = CustomerQueryService(customerRepository)
+
+        val result = sut.getCustomerById(Long.MAX_VALUE)
+        Assertions.assertTrue(result ==null)
+    }
 }

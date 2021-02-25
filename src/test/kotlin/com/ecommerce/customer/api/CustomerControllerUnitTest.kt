@@ -15,6 +15,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpStatus
 
@@ -120,5 +121,40 @@ class CustomerControllerUnitTest {
         val result = controller.updateCustomer(expectedId, customer)
 
         Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `getCustomerById should return OK`(){
+        val customer = buildCustomerDTO()
+        val expectedId = 1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { queryMock.getCustomerById(expectedId) } returns customer
+
+        val result = controller.getCustomerById(expectedId)
+
+        Assertions.assertTrue(result.statusCode==HttpStatus.OK)
+    }
+
+    @Test
+    fun `getCustomerById should return BadRequest`(){
+
+        val expectedId = 1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { queryMock.getCustomerById(expectedId) } returns null
+
+        val result = controller.getCustomerById(expectedId)
+        assertAll(
+            {Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)},
+            {Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
+        )
+
     }
 }
