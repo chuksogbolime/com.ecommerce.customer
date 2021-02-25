@@ -23,12 +23,9 @@
 <h1>Coverage Summary for Class: CustomerCommandService (com.ecommerce.customer.core.services)</h1>
 
 <table class="coverageStats">
+
 <tr>
   <th class="name">Class</th>
-<th class="coverageStat 
-">
-  Class, %
-</th>
 <th class="coverageStat 
 ">
   Method, %
@@ -45,6 +42,25 @@
     100%
   </span>
   <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/ 11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CustomerCommandService$updateCustomer$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
     (1/ 1)
   </span>
 </td>
@@ -53,7 +69,18 @@
     100%
   </span>
   <span class="absValue">
-    (2/ 2)
+    (7/ 7)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
   </span>
 </td>
 <td class="coverageStat">
@@ -61,11 +88,10 @@
     100%
   </span>
   <span class="absValue">
-    (5/ 5)
+    (18/ 18)
   </span>
 </td>
 </tr>
-
 </table>
 
 <br/>
@@ -74,33 +100,55 @@
 
 <div class="sourceCode"><i>1</i>&nbsp;package com.ecommerce.customer.core.services
 <i>2</i>&nbsp;
-<i>3</i>&nbsp;import com.ecommerce.customer.core.extensions.toCustomer
-<i>4</i>&nbsp;import com.ecommerce.customer.core.extensions.toCustomerDTO
-<i>5</i>&nbsp;import com.ecommerce.customer.core.interfaces.ICustomerCommandService
-<i>6</i>&nbsp;import com.ecommerce.customer.core.interfaces.ICustomerRepository
-<i>7</i>&nbsp;import com.ecommerce.customer.core.models.dtos.CustomerDTO
-<i>8</i>&nbsp;import org.springframework.http.ResponseEntity
-<i>9</i>&nbsp;import org.springframework.stereotype.Service
-<i>10</i>&nbsp;
-<i>11</i>&nbsp;@Service
-<b class="fc"><i>12</i>&nbsp;class CustomerCommandService(private val customerRepository: ICustomerRepository): ICustomerCommandService {</b>
-<i>13</i>&nbsp;
-<i>14</i>&nbsp;    override fun addCustomer(customerDTO: CustomerDTO): Triple&lt;CustomerDTO?,Boolean,String&gt; {
-<b class="fc"><i>15</i>&nbsp;        return try {</b>
-<b class="fc"><i>16</i>&nbsp;            Triple(customerRepository.save(customerDTO.toCustomer()).toCustomerDTO(), true, &quot;Success&quot;)</b>
-<b class="fc"><i>17</i>&nbsp;        }catch (ex:Exception){</b>
-<b class="fc"><i>18</i>&nbsp;            Triple(null, false, ex.toString())</b>
-<i>19</i>&nbsp;        }
-<i>20</i>&nbsp;
-<i>21</i>&nbsp;    }
-<i>22</i>&nbsp;
-<i>23</i>&nbsp;}
+<i>3</i>&nbsp;import com.ecommerce.customer.core.entities.Customer
+<i>4</i>&nbsp;import com.ecommerce.customer.core.extensions.toCustomer
+<i>5</i>&nbsp;import com.ecommerce.customer.core.extensions.toCustomerDTO
+<i>6</i>&nbsp;import com.ecommerce.customer.core.interfaces.ICustomerCommandService
+<i>7</i>&nbsp;import com.ecommerce.customer.core.interfaces.ICustomerRepository
+<i>8</i>&nbsp;import com.ecommerce.customer.core.models.dtos.CustomerDTO
+<i>9</i>&nbsp;import org.springframework.data.repository.findByIdOrNull
+<i>10</i>&nbsp;import org.springframework.stereotype.Service
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;@Service
+<b class="fc"><i>13</i>&nbsp;class CustomerCommandService(private val customerRepository: ICustomerRepository): ICustomerCommandService {</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    override fun addCustomer(customerDTO: CustomerDTO): Triple&lt;CustomerDTO?,Boolean,String&gt; {
+<b class="fc"><i>16</i>&nbsp;        return try {</b>
+<b class="fc"><i>17</i>&nbsp;            Triple(customerRepository.save(customerDTO.toCustomer()).toCustomerDTO(), true, &quot;Success&quot;)</b>
+<b class="fc"><i>18</i>&nbsp;        }catch (ex:Exception){</b>
+<b class="fc"><i>19</i>&nbsp;            Triple(null, false, ex.toString())</b>
+<i>20</i>&nbsp;        }
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    override fun updateCustomer(id:Long, customerDTO: CustomerDTO): Triple&lt;CustomerDTO?,Boolean,String&gt;{
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;        return try {</b>
+<b class="fc"><i>27</i>&nbsp;            customerRepository.findById(id).map { exiting -&gt;</b>
+<b class="fc"><i>28</i>&nbsp;               val update = exiting.copy(</b>
+<b class="fc"><i>29</i>&nbsp;                   houseNumber = customerDTO.houseNumber,</b>
+<b class="fc"><i>30</i>&nbsp;                   street = customerDTO.street,</b>
+<b class="fc"><i>31</i>&nbsp;                   lastName = customerDTO.lastName,</b>
+<b class="fc"><i>32</i>&nbsp;                   name = customerDTO.name,</b>
+<b class="fc"><i>33</i>&nbsp;                   phone = customerDTO.phone</b>
+<i>34</i>&nbsp;               )
+<b class="fc"><i>35</i>&nbsp;               Triple(customerRepository.save(update).toCustomerDTO(), true,&quot;Success&quot;)</b>
+<b class="fc"><i>36</i>&nbsp;           }.orElse(</b>
+<b class="fc"><i>37</i>&nbsp;               Triple(customerDTO,false,&quot;Cutomer with Id:$id, does not exist&quot;)</b>
+<i>38</i>&nbsp;           )
+<i>39</i>&nbsp;
+<b class="fc"><i>40</i>&nbsp;        } catch (ex: java.lang.Exception) {</b>
+<b class="fc"><i>41</i>&nbsp;            Triple(null, false, ex.toString())</b>
+<i>42</i>&nbsp;        }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-02-25 01:14</div>
+    <div style="float:right;">generated on 2021-02-25 16:32</div>
 </div>
 </body>
 </html>

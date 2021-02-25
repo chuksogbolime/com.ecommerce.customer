@@ -53,7 +53,7 @@
     100%
   </span>
   <span class="absValue">
-    (3/ 3)
+    (4/ 4)
   </span>
 </td>
 <td class="coverageStat">
@@ -61,7 +61,7 @@
     100%
   </span>
   <span class="absValue">
-    (7/ 7)
+    (11/ 11)
   </span>
 </td>
 </tr>
@@ -108,14 +108,25 @@
 <b class="fc"><i>34</i>&nbsp;            ResponseEntity.badRequest().body(&quot;Error saving customer&quot;)</b>
 <i>35</i>&nbsp;    }
 <i>36</i>&nbsp;
-<i>37</i>&nbsp;
-<i>38</i>&nbsp;}
+<i>37</i>&nbsp;    @PutMapping(&quot;/{id}&quot;)
+<i>38</i>&nbsp;    fun updateCustomer(@PathVariable(value = &quot;id&quot;) id: Long,
+<i>39</i>&nbsp;        @Validated @RequestBody customer: CustomerApiRequest):ResponseEntity&lt;Any&gt;{
+<i>40</i>&nbsp;
+<b class="fc"><i>41</i>&nbsp;        val result=customerCommandService.updateCustomer(id, customer.toCustomerDTO())</b>
+<b class="fc"><i>42</i>&nbsp;        return if(result.second)</b>
+<b class="fc"><i>43</i>&nbsp;            ResponseEntity.ok(result.first!!)</b>
+<i>44</i>&nbsp;        else
+<b class="fc"><i>45</i>&nbsp;            ResponseEntity.badRequest().body(&quot;Error updating customer&quot;)</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-02-25 01:14</div>
+    <div style="float:right;">generated on 2021-02-25 16:32</div>
 </div>
 </body>
 </html>

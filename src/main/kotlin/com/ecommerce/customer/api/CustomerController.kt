@@ -34,5 +34,16 @@ class CustomerController(private val customerQueryService: ICustomerQueryService
             ResponseEntity.badRequest().body("Error saving customer")
     }
 
+    @PutMapping("/{id}")
+    fun updateCustomer(@PathVariable(value = "id") id: Long,
+        @Validated @RequestBody customer: CustomerApiRequest):ResponseEntity<Any>{
+
+        val result=customerCommandService.updateCustomer(id, customer.toCustomerDTO())
+        return if(result.second)
+            ResponseEntity.ok(result.first!!)
+        else
+            ResponseEntity.badRequest().body("Error updating customer")
+    }
+
 
 }
