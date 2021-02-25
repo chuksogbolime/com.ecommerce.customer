@@ -1,7 +1,8 @@
-package com.ecommerce.customer.extensions
+package com.ecommerce.customer.core.extensions
 
 import com.ecommerce.customer.core.entities.Customer
-import com.ecommerce.customer.core.models.CustomerDTO
+import com.ecommerce.customer.core.models.dtos.CustomerDTO
+import com.ecommerce.customer.core.models.api.requests.CustomerApiRequest
 
 fun Customer.toCustomerDTO() = CustomerDTO(
     name=name,
@@ -19,4 +20,13 @@ fun CustomerDTO.toCustomer() = Customer(
     houseNumber=houseNumber,
     phone=phone,
     id=id
+)
+
+fun CustomerApiRequest.toCustomerDTO() = CustomerDTO(
+    name=name,
+    lastName=lastName,
+    street=street,
+    houseNumber=houseNumber,
+    phone=phone,
+    id=null
 )

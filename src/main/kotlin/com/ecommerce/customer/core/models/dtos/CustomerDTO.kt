@@ -1,4 +1,4 @@
-package com.ecommerce.customer.core.models
+package com.ecommerce.customer.core.models.dtos
 
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
