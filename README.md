@@ -1,2 +1,2 @@
 # com.ecommerce.customer
-implements simple rest api with CRUD functionality in Kotlin for customer details.
+implements simple Springboot REST Api with CRUD functionality in Kotlin for customer details.
