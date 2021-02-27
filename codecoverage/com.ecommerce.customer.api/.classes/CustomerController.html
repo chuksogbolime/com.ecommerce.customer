@@ -53,7 +53,7 @@
     100%
   </span>
   <span class="absValue">
-    (5/ 5)
+    (6/ 6)
   </span>
 </td>
 <td class="coverageStat">
@@ -61,7 +61,7 @@
     100%
   </span>
   <span class="absValue">
-    (13/ 13)
+    (15/ 15)
   </span>
 </td>
 </tr>
@@ -125,14 +125,19 @@
 <b class="fc"><i>51</i>&nbsp;        return if(result !=null) ResponseEntity.ok(result) else ResponseEntity.badRequest().body(&quot;Customer with Id:$id does not exist&quot;)</b>
 <i>52</i>&nbsp;    }
 <i>53</i>&nbsp;
-<i>54</i>&nbsp;
-<i>55</i>&nbsp;}
+<i>54</i>&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+<i>55</i>&nbsp;    fun deleteCustomer(@PathVariable(value = &quot;id&quot;) id: Long):ResponseEntity&lt;Any&gt;{
+<b class="fc"><i>56</i>&nbsp;        val result=customerCommandService.deleteCustomer(id)</b>
+<b class="fc"><i>57</i>&nbsp;        return if(result.first) ResponseEntity.ok(result.second) else ResponseEntity.badRequest().body(&quot;Customer with Id:$id does not exist&quot;)</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-02-25 22:58</div>
+    <div style="float:right;">generated on 2021-02-27 23:53</div>
 </div>
 </body>
 </html>

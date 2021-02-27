@@ -42,4 +42,18 @@ class CustomerCommandService(private val customerRepository: ICustomerRepository
         }
 
     }
+
+    override fun deleteCustomer(id: Long):Pair<Boolean, String>{
+        return try{
+            customerRepository.findById(id).map { exiting ->
+                customerRepository.delete(exiting)
+                Pair(true, "Customer with Id:$id, was deleted successfully")
+            }.orElse(
+                Pair(false, "Customer with Id:$id, does not exist")
+            )
+        }
+        catch (ex:java.lang.Exception){
+            Pair(false, ex.toString())
+        }
+    }
 }
