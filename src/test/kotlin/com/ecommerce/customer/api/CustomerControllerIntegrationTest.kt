@@ -42,7 +42,7 @@ class CustomerControllerIntegrationTest
         mockMvc.get("/api/customer").andExpect {
             status { isOk() }
             content { contentType(MediaType.APPLICATION_JSON) }
-            content { customerList }
+            content { ObjectMapper().writeValueAsString(customerList) }
         }
 
     }
@@ -52,7 +52,7 @@ class CustomerControllerIntegrationTest
         customerRepository.deleteAll()
        mockMvc.get("/api/customer").andExpect {
             status { isBadRequest() }
-            content { "Could not fetch data" }
+            content {ObjectMapper().writeValueAsString( "Could not fetch data" )}
         }
 
     }
@@ -77,7 +77,7 @@ class CustomerControllerIntegrationTest
     fun `addCustomer should return Http Status BadRequest`(){
         mockMvc.post("/api/customer").andExpect {
             status { isBadRequest() }
-            content { "Error saving customer" }
+            content { ObjectMapper().writeValueAsString("Error saving customer") }
         }
 
     }
@@ -103,7 +103,7 @@ class CustomerControllerIntegrationTest
     fun `updateCustomer should return Http Status BadRequest`(){
         mockMvc.put("/api/customer/1").andExpect {
             status { isBadRequest() }
-            content { "Error saving customer" }
+            content { ObjectMapper().writeValueAsString("Error saving customer") }
         }
 
     }
@@ -130,7 +130,7 @@ class CustomerControllerIntegrationTest
         val expectedId = Long.MAX_VALUE
         mockMvc.get("/api/customer/${expectedId}").andExpect {
             status { isBadRequest() }
-            content { "Customer with Id:$expectedId does not exist" }
+            content {ObjectMapper().writeValueAsString( "Customer with Id:$expectedId does not exist") }
         }
 
     }
@@ -157,7 +157,7 @@ class CustomerControllerIntegrationTest
         val expectedId = Long.MAX_VALUE
         mockMvc.delete("/api/customer/${expectedId}").andExpect {
             status { isBadRequest() }
-            content { "Customer with Id:$expectedId does not exist" }
+            content { ObjectMapper().writeValueAsString("Customer with Id:$expectedId does not exist") }
         }
 
     }
