@@ -157,4 +157,39 @@ class CustomerControllerUnitTest {
         )
 
     }
+
+    @Test
+    fun `deleteCustomer should return OK`(){
+
+        val expectedId = 1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { commandMock.deleteCustomer(expectedId) } returns Pair(true, "Customer with Id:$expectedId, was deleted successfully")
+
+        val result = controller.deleteCustomer(expectedId)
+
+        Assertions.assertTrue(result.statusCode==HttpStatus.OK)
+    }
+
+    @Test
+    fun `deleteCustomer should return BadRequest`(){
+
+        val expectedId = 1L
+        @RelaxedMockK
+        val queryMock = mockk<ICustomerQueryService>()
+        val commandMock = mockk<ICustomerCommandService>()
+
+        val controller =CustomerController(queryMock,commandMock)
+        every { commandMock.deleteCustomer(expectedId) } returns Pair(false,"Customer with Id:$expectedId does not exist")
+
+        val result = controller.deleteCustomer(expectedId)
+        assertAll(
+            {Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)},
+            {Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
+        )
+
+    }
 }

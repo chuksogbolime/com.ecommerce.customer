@@ -51,5 +51,10 @@ class CustomerController(private val customerQueryService: ICustomerQueryService
         return if(result !=null) ResponseEntity.ok(result) else ResponseEntity.badRequest().body("Customer with Id:$id does not exist")
     }
 
+    @DeleteMapping("/{id}")
+    fun deleteCustomer(@PathVariable(value = "id") id: Long):ResponseEntity<Any>{
+        val result=customerCommandService.deleteCustomer(id)
+        return if(result.first) ResponseEntity.ok(result.second) else ResponseEntity.badRequest().body("Customer with Id:$id does not exist")
+    }
 
 }

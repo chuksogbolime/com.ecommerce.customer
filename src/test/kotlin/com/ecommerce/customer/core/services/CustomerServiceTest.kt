@@ -167,4 +167,39 @@ class CustomerServiceTest
         val result = sut.getCustomerById(Long.MAX_VALUE)
         Assertions.assertTrue(result ==null)
     }
+
+    @Test
+    fun `deleteCustomer should return true when a valid customer id is passed`(){
+        val customer = customerRepository.save(buildCustomer())
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepository)
+        val result = sut.deleteCustomer(customer.id!!)
+        assertAll(
+            {Assertions.assertTrue(result.first)},
+            {Assertions.assertEquals("Customer with Id:${customer.id}, was deleted successfully", result.second)}
+        )
+
+    }
+    @Test
+    fun `deleteCustomer should return false when an invalid customer id is passed`(){
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepository)
+        val expectedId =Long.MAX_VALUE
+        val result = sut.deleteCustomer(expectedId)
+        assertAll(
+            {Assertions.assertFalse(result.first)},
+            {Assertions.assertEquals("Customer with Id:$expectedId, does not exist", result.second)}
+        )
+    }
+    @Test
+    fun `deleteCustomer should throw an exception and return false and exception message`(){
+
+        val customerDTO = buildCustomerDTO()
+        @RelaxedMockK
+        var customerRepositoryMock = mockk<ICustomerRepository>()
+        every { customerRepositoryMock.delete(customerDTO.toCustomer()) } throws Exception("Exception")
+        val sut : ICustomerCommandService = CustomerCommandService(customerRepositoryMock)
+
+
+        val result = sut.deleteCustomer(0)
+        Assertions.assertFalse(result.first)
+    }
 }

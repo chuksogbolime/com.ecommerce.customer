@@ -7,4 +7,5 @@ interface ICustomerCommandService {
     fun addCustomer(customerDTO: CustomerDTO): Triple<CustomerDTO?,Boolean,String>
 
     fun updateCustomer(id:Long, customerDTO: CustomerDTO): Triple<CustomerDTO?,Boolean,String>
+    fun deleteCustomer(id: Long):Pair<Boolean, String>
 }
