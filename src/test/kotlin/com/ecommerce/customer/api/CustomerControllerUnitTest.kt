@@ -43,7 +43,7 @@ class CustomerControllerUnitTest {
     }
 
     @Test
-    fun `getCustomers should return BadRequest`(){
+    fun `getCustomers should return NoContent`(){
         val customerList = ArrayList<CustomerDTO>()
 
         @RelaxedMockK
@@ -55,11 +55,11 @@ class CustomerControllerUnitTest {
 
         val result = controller.getCustomers()
 
-        Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)
+        Assertions.assertTrue(result.statusCode==HttpStatus.NO_CONTENT)
     }
 
     @Test
-    fun `addCustomer should return OK`(){
+    fun `addCustomer should return Created`(){
         val customer = buildCustomerApiRequest()
 
         @RelaxedMockK
@@ -71,7 +71,7 @@ class CustomerControllerUnitTest {
 
         val result = controller.addCustomer(customer)
 
-        Assertions.assertTrue(result.statusCode==HttpStatus.OK)
+        Assertions.assertTrue(result.statusCode==HttpStatus.CREATED)
     }
 
     @Test
@@ -92,7 +92,7 @@ class CustomerControllerUnitTest {
 
 
     @Test
-    fun `updateCustomer should return OK`(){
+    fun `updateCustomer should return NoContent`(){
         val customer = buildCustomerApiRequest()
         val expectedId=1L
         @RelaxedMockK
@@ -104,7 +104,7 @@ class CustomerControllerUnitTest {
 
         val result = controller.updateCustomer(expectedId, customer)
 
-        Assertions.assertTrue(result.statusCode==HttpStatus.OK)
+        Assertions.assertTrue(result.statusCode == HttpStatus.NO_CONTENT)
     }
 
     @Test
@@ -140,7 +140,7 @@ class CustomerControllerUnitTest {
     }
 
     @Test
-    fun `getCustomerById should return BadRequest`(){
+    fun `getCustomerById should return NotFound`(){
 
         val expectedId = 1L
         @RelaxedMockK
@@ -152,8 +152,8 @@ class CustomerControllerUnitTest {
 
         val result = controller.getCustomerById(expectedId)
         assertAll(
-            {Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)},
-            {Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
+            {Assertions.assertTrue(result.statusCode==HttpStatus.NOT_FOUND)},
+            //{Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
         )
 
     }
@@ -175,7 +175,7 @@ class CustomerControllerUnitTest {
     }
 
     @Test
-    fun `deleteCustomer should return BadRequest`(){
+    fun `deleteCustomer should return NotFound`(){
 
         val expectedId = 1L
         @RelaxedMockK
@@ -187,8 +187,8 @@ class CustomerControllerUnitTest {
 
         val result = controller.deleteCustomer(expectedId)
         assertAll(
-            {Assertions.assertTrue(result.statusCode==HttpStatus.BAD_REQUEST)},
-            {Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
+            {Assertions.assertTrue(result.statusCode==HttpStatus.NOT_FOUND)}
+            //{Assertions.assertEquals("Customer with Id:$expectedId does not exist", result.body)}
         )
 
     }

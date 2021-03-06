@@ -48,17 +48,17 @@ class CustomerControllerIntegrationTest
     }
 
     @Test
-    fun `getCustomer should return Http Status BadRequest`(){
+    fun `getCustomer should return Http Status NoContent`(){
         customerRepository.deleteAll()
        mockMvc.get("/api/customer").andExpect {
-            status { isBadRequest() }
+            status { isNoContent() }
             content {ObjectMapper().writeValueAsString( "Could not fetch data" )}
         }
 
     }
 
     @Test
-    fun `addCustomer should return Http Status OK`(){
+    fun `addCustomer should return Http Status Created`(){
 
         val customer = buildCustomerDTO()
         mockMvc.post("/api/customer"){
@@ -66,7 +66,7 @@ class CustomerControllerIntegrationTest
             contentType = MediaType.APPLICATION_JSON
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
             content { contentType(MediaType.APPLICATION_JSON) }
             content { ObjectMapper().writeValueAsString(customer) }
         }
@@ -83,7 +83,7 @@ class CustomerControllerIntegrationTest
     }
 
     @Test
-    fun `updateCustomer should return Http Status OK`(){
+    fun `updateCustomer should return Http Status NoContent`(){
 
         val customer = buildCustomerDTO()
         val saved= customerRepository.save(customer.toCustomer())
@@ -92,8 +92,8 @@ class CustomerControllerIntegrationTest
             contentType = MediaType.APPLICATION_JSON
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk() }
-            content { contentType(MediaType.APPLICATION_JSON) }
+            status { isNoContent() }
+            //content { contentType(MediaType.APPLICATION_JSON) }
             content { ObjectMapper().writeValueAsString(customer) }
         }
 
@@ -126,10 +126,10 @@ class CustomerControllerIntegrationTest
     }
 
     @Test
-    fun `getCustomerById should return Http Status BadRequest`(){
+    fun `getCustomerById should return Http Status NotFound`(){
         val expectedId = Long.MAX_VALUE
         mockMvc.get("/api/customer/${expectedId}").andExpect {
-            status { isBadRequest() }
+            status { isNotFound() }
             content {ObjectMapper().writeValueAsString( "Customer with Id:$expectedId does not exist") }
         }
 
@@ -146,17 +146,17 @@ class CustomerControllerIntegrationTest
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk() }
-            content { contentType(MediaType.APPLICATION_JSON) }
+            //content { contentType(MediaType.APPLICATION_JSON) }
             content { ObjectMapper().writeValueAsString("Customer with Id:${saved.id}, was deleted successfully") }
         }
 
     }
 
     @Test
-    fun `deleteCustomer should return Http Status BadRequest`(){
+    fun `deleteCustomer should return Http Status NotFound`(){
         val expectedId = Long.MAX_VALUE
         mockMvc.delete("/api/customer/${expectedId}").andExpect {
-            status { isBadRequest() }
+            status { isNotFound() }
             content { ObjectMapper().writeValueAsString("Customer with Id:$expectedId does not exist") }
         }
 
